@@ -22,12 +22,33 @@ def ExecutaJs(Script):
 
     driver.execute_script(Script)
 
-
+#Fução para clicar pelo Id
 def ClickId(Id):
 
     driver.execute_script("document.getElementById('"+Id+"').click()")
 
 
+
+#Função para setar o elemento na pagina
+def SetaElementoId(Id, Valor):
+
+    driver.execute_script("document.getElementById('"+Id+"').value='"+Valor+"'")
+
+
+#Função para capturar o texto por Js
+def WebGetTextJs(Id):
+
+    teste = driver.execute_script("return document.getElementById('"+Id+"').innerText")
+
+    return teste
+
+
+
+#Definindo variavel de tempo
+tempoCurto = 10
+tempoMedio = 30
+tempoLongo = 60
+wait = time.sleep(1)
 
 
 
@@ -38,8 +59,45 @@ Url = "https://buscacepinter.correios.com.br/app/endereco/index.php"
 
 driver = abreNavegador(Url)
 
-time.sleep(2)
 
+#fazer ele escrever log em uma pasta
+
+i = 0
+
+for i in range(tempoCurto):
+
+    Id = "titulo_tela"
+
+    #validando se a pagina foi carregada
+    try:
+        ValidaCarragamento = WebGetTextJs(Id)
+    except:
+        print("Elemento ainda não encontrado")
+        pass
+
+
+    if ValidaCarragamento == "Busca CEP":
+        print("Elemento encontrado")
+        break
+
+    #Validando se já deu o tempo de validação
+    if i >=9:
+        
+        print("Erro ao localizar o Elemento")
+        break
+
+    wait
+
+    
+
+#Setando o valor no site
+
+Id = "endereco"
+
+SetaElementoId(Id, "06680103")
+
+
+time.sleep(1)
 
 #Clicando no botão pesquisar
 
