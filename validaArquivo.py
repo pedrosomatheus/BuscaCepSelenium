@@ -8,7 +8,7 @@ def EscreveLog(mensagem):
     #Passando fixo para não ter que passar na chamada da função e já valido a criação dessas pastas
     ArquivoLog = "C:\\Users\\edvan\\BPA001 - BuscaCep\\1. LOG\\2023\\01\\14\\LOG.txt"
 
-    my_file = open(ArquivoLog, 'w', encoding='utf-8')
+    my_file = open(ArquivoLog, 'a', encoding='utf-8')
 
     my_file.write(f'{mensagem}' + '\n')
 
@@ -28,8 +28,6 @@ CaminhoFinalizado = f'{CaminhoProjeto}\\4. FINALIZADO'
 #Capturando a data de hoje
 now = datetime.now()
 
-
-print (CaminhoProjeto)
 
 #Validando se a pasta do caminho do projeto existe
 if os.path.isdir(CaminhoProjeto) == False:
