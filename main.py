@@ -47,7 +47,7 @@ def SetaElementoId(Id, Valor):
 
 
 #Função para capturar o texto por Js e fazer a validação de carragemento da tela
-def WebGetTextJs(Id,TextoElemento,tempo):
+def WebValidaTextJs(Id,TextoElemento,tempo):
 
     i = 0
 
@@ -103,7 +103,7 @@ EscreveLog(mensagem)
 Id = "titulo_tela"
 TextoElemento = "Busca CEP"
 
-WebGetTextJs(Id,TextoElemento,tempoCurto)
+WebValidaTextJs(Id,TextoElemento,tempoCurto)
 
 
 
