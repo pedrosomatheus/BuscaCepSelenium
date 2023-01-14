@@ -4,6 +4,8 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 
+import pyodbc
+
 from validaArquivo import EscreveLog
 from validaArquivo import ValidaArquivo
 
@@ -12,8 +14,6 @@ from validaArquivo import ValidaArquivo
 
 #Chamando a função que faz a validação das pasta e arquivo de log
 ValidaArquivo()
-
-
 
 
 
@@ -53,6 +53,7 @@ def WebValidaTextJs(Id,TextoElemento,tempo):
 
     for i in range(tempo):
 
+        #Capturando o valor do texto
         try:
             ValidaCarragamento = driver.execute_script("return document.getElementById('"+Id+"').innerText")
         except:
@@ -68,8 +69,12 @@ def WebValidaTextJs(Id,TextoElemento,tempo):
             
             break
 
+        time.sleep(1)
 
-        return WebGetTextJs
+    return WebValidaTextJs
+        
+
+
 
 
 
@@ -82,6 +87,11 @@ wait = time.sleep(1)
 
 
 EscreveLog("=========================== INICIO - Navegação Busca Cep ================================")
+
+
+
+
+
 
 
 #Abrindo navegador
@@ -115,7 +125,6 @@ EscreveLog(mensagem)
 Id = "endereco"
 
 SetaElementoId(Id, "06680103")
-
 
 
 
