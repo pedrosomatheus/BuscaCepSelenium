@@ -99,33 +99,42 @@ def ValidaArquivo():
     EscreveLog("=========================== INICIO - Valida Arquivo ================================")
 
 
+    CaminhoArquivoExcel = ""
+
     #Validando se já não contem arquivo na pasta PROCESSAMENTO
     caminhosArquivo = [
     os.path.join(CaminhoProcessamento, nome) 
     for nome in os.listdir(CaminhoProcessamento)
     ]
+
+    print(caminhosArquivo)
     
     for arq in caminhosArquivo:
         if arq.lower().endswith(".xlsx"):
             CaminhoArquivoExcel = arq
-
-        else:
-
-            #Listando os arquivos dentro da pasta INPUT
-            caminhosArquivo = [
-            os.path.join(CaminhoInput, nome) 
-            for nome in os.listdir(CaminhoInput)
-            ]
-            print (caminhosArquivo)
-
-            #Capturando o nome do arquivo excel e movendo para pasta de processamento
-            for arq in caminhosArquivo:
-                if arq.lower().endswith(".xlsx"):
-                    CaminhoArquivoExcel = arq
-                    shutil.move(CaminhoArquivoExcel, CaminhoProcessamento)
-
+        
     
 
+    if len(CaminhoArquivoExcel) == 0:
+
+
+        #Listando os arquivos dentro da pasta INPUT
+        caminhosArquivo = [
+        os.path.join(CaminhoInput, nome) 
+        for nome in os.listdir(CaminhoInput)
+        ]
+        print (caminhosArquivo)
+
+        #Capturando o nome do arquivo excel e movendo para pasta de processamento
+        for arq in caminhosArquivo:
+            if arq.lower().endswith(".xlsx"):
+                CaminhoArquivoExcel = arq
+                shutil.move(CaminhoArquivoExcel, CaminhoProcessamento)
+                CaminhoArquivoExcel = arq.replace("2. INPUT", "3. PROCESSAMENTO")
+                        
+
+     
+    print(CaminhoArquivoExcel)
 
 
 
