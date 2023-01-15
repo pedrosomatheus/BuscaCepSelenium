@@ -1,16 +1,22 @@
 import os
+import shutil
 from pathlib import Path
 from datetime import datetime
 
 #Função criada para escrever o log
 def EscreveLog(mensagem):
 
+    now = datetime.now()
+
     #Passando fixo para não ter que passar na chamada da função e já valido a criação dessas pastas
-    ArquivoLog = "C:\\Users\\edvan\\BPA001 - BuscaCep\\1. LOG\\2023\\01\\14\\LOG.txt"
+    ArquivoLog = f"{Path.home()}\\BPA001 - BuscaCep\\1. LOG\\{now.strftime('%Y')}\\{now.strftime('%m')}\\{now.strftime('%d')}\\LOG.txt"
+
+
+    dataHora = now.strftime("%Y-%m-%d %H:%M:%S")
 
     my_file = open(ArquivoLog, 'a', encoding='utf-8')
 
-    my_file.write(f'{mensagem}' + '\n')
+    my_file.write(f'{dataHora} - '+ f'{mensagem}' + '\n')
 
     my_file.close()
 
@@ -18,8 +24,6 @@ def EscreveLog(mensagem):
 #Função que faz a validação se as pasta já estão criadas
 def ValidaArquivo():
 
-    
-    EscreveLog("=========================== INICIO - Valida Arquivo ================================")
 
 
     CaminhoProjeto = f'{Path.home()}\\BPA001 - BuscaCep'
@@ -34,6 +38,8 @@ def ValidaArquivo():
 
     #Capturando a data de hoje
     now = datetime.now()
+
+
 
 
     #Validando se a pasta do caminho do projeto existe
@@ -90,5 +96,50 @@ def ValidaArquivo():
         os.mkdir(CaminhoFinalizado)
 
 
+    EscreveLog("=========================== INICIO - Valida Arquivo ================================")
+
+
+    #Validando se já não contem arquivo na pasta PROCESSAMENTO
+    caminhosArquivo = [
+    os.path.join(CaminhoProcessamento, nome) 
+    for nome in os.listdir(CaminhoProcessamento)
+    ]
+    
+    for arq in caminhosArquivo:
+        if arq.lower().endswith(".xlsx"):
+            CaminhoArquivoExcel = arq
+
+        else:
+
+            #Listando os arquivos dentro da pasta INPUT
+            caminhosArquivo = [
+            os.path.join(CaminhoInput, nome) 
+            for nome in os.listdir(CaminhoInput)
+            ]
+            print (caminhosArquivo)
+
+            #Capturando o nome do arquivo excel e movendo para pasta de processamento
+            for arq in caminhosArquivo:
+                if arq.lower().endswith(".xlsx"):
+                    CaminhoArquivoExcel = arq
+                    shutil.move(CaminhoArquivoExcel, CaminhoProcessamento)
+
+    
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
     EscreveLog("=========================== FIM - Valida Arquivo ================================")
 
+
+ValidaArquivo()
