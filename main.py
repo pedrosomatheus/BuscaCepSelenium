@@ -203,7 +203,7 @@ for row in crsr:
      # Elemento de erro encontrado: "Não há dados a serem exibidos"
 
             
-        Query = F"UPDATE [{format(tableName)}] SET [Status] = 'Não há dados a serem exibidos' WHERE [CEP] = '{Cep}'"
+        Query = f"UPDATE [{format(tableName)}] SET [Status] = 'Não há dados a serem exibidos' WHERE [CEP] = '{Cep}'"
         crsr.execute(Query)
         cnxn.commit()
 
