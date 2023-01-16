@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
+import os
 
 import pyodbc
 
@@ -41,7 +42,7 @@ def SetaElementoId(Id, Valor):
 
 
 #Função para capturar o texto por Js e fazer a validação de carragemento da tela
-def WebValidaTextJs(Id,TextoElemento,tempo):
+def WebValidaTextJs(Id,tempo,TextoElemento,TextoErro = "Não há dados a serem exibidos"):
 
     i = 0
 
@@ -58,14 +59,18 @@ def WebValidaTextJs(Id,TextoElemento,tempo):
         if ValidaCarragamento == TextoElemento:
             break
 
+                #Validando se o elemento foi encontrado
+        if ValidaCarragamento == TextoErro:
+            break
+
         #Validando se já deu o tempo de validação
-        if i >=9:
+        if i >=tempo:
             
             break
 
         time.sleep(1)
 
-    return WebValidaTextJs
+    return ValidaCarragamento
         
 
 
@@ -82,9 +87,10 @@ wait = time.sleep(1)
 
 EscreveLog("=========================== INICIO - Navegação Busca Cep ================================")
 
+# Matando processo do excel
+os.system('taskkill /F  /IM EXCEL.EXE')
 
-
-#Chamando a função que faz a validação das pasta e arquivo de log para retornar o nome do arquivo excel
+# Chamando a função que faz a validação das pasta e arquivo de log para retornar o nome do arquivo excel
 mensagem = "Chamando a função que faz a validação das pasta e arquivo de log para retornar o nome do arquivo excel"
 EscreveLog(mensagem)
 
@@ -101,7 +107,9 @@ for driver in pyodbc.drivers():
     # Pegando o nome apenas para o driver .xlsx
     mensagem = "Pegando o nome apenas para o driver .xlsx"
     EscreveLog(mensagem)
+   
     if '.xlsx' in driver:
+        
         myDriver = driver
 
 # Definindo connection string
@@ -110,9 +118,9 @@ EscreveLog(mensagem)
 
 conn_str = (r'DRIVER={'+ myDriver +'};'
             f'DBQ={CaminhoArquivoExcel};'
-            r'ReadOnly=1') # para leitura setar como 0
+            r'ReadOnly=0') # O padrão do Excel é uma conexão somente leitura, portanto, se você quiser atualizar a planilha, inclua ReadOnly=0
 
-# definir nossa conexão, autocommit DEVE SER CONFIGURADO PARA TRUE, também podemos editar dados.
+# Definir nossa conexão, autocommit DEVE SER CONFIGURADO PARA TRUE, também podemos editar dados.
 cnxn = pyodbc.connect(conn_str, autocommit=True)
 crsr = cnxn.cursor()
 
@@ -125,16 +133,17 @@ for worksheet in crsr.tables():
     tableName = worksheet[2]
     
     
-#"SELECT * FROM [Planilha1$]"
+# "SELECT * FROM [Planilha1$]"
 mensagem = "Query executada: SELECT * FROM [Planilha1$]"
 EscreveLog(mensagem)
-crsr.execute("SELECT * FROM [{}]".format(tableName))
 
+Query = "SELECT * FROM [{}] WHERE [Status] IS NULL".format(tableName)
+crsr.execute(Query)
 
-#Loop na minha tabela
+# Loop na minha tabela
 for row in crsr:
     
-    #Setando variaveis
+    # Setando variaveis
     Cep = row.CEP
     lougradouro = ""
     bairro = ""
@@ -152,18 +161,18 @@ for row in crsr:
 
 
 
-    #Chamando função para validar se a tela carregou
+    # Chamando função para validar se a tela carregou
     mensagem = "Chamando função para validar se a tela carregou"
     EscreveLog(mensagem)
 
     Id = "titulo_tela"
     TextoElemento = "Busca CEP"
 
-    WebValidaTextJs(Id,TextoElemento,tempoCurto)
+    WebValidaTextJs(Id,tempoCurto,TextoElemento)
 
 
 
-    #Setando o valor no site
+    # Setando o valor no site
     mensagem = "Setando o valor no site"
     EscreveLog(mensagem)
 
@@ -172,8 +181,7 @@ for row in crsr:
     SetaElementoId(Id, Cep)
 
 
-
-    #Clicando no botão pesquisar
+    # Clicando no botão pesquisar
     mensagem = "Clicando no botão pesquisar"
     EscreveLog(mensagem)
 
@@ -181,20 +189,45 @@ for row in crsr:
 
     ClickId(Id)
 
+   
+
+    # Chamando função para validar se o CEP carregou
+    mensagem = "Chamando função para validar se o CEP carregou"
+    EscreveLog(mensagem)
+
+    Id = "mensagem-resultado"
+    TextoElemento = "Resultado da Busca por Endereço ou CEP"
+
+    if WebValidaTextJs(Id,tempoCurto,TextoElemento) != TextoElemento:
+
+     # Elemento de erro encontrado: "Não há dados a serem exibidos"
+
+            
+        Query = F"UPDATE [{format(tableName)}] SET [Status] = 'Não há dados a serem exibidos' WHERE [CEP] = '{Cep}'"
+        crsr.execute(Query)
+        cnxn.commit()
 
 
+        
+        
+
+
+
+
+
+
+    input("teste")
 
     
 
-    input("teste")
+
+   
+
 
 EscreveLog("=========================== FIM - Navegação Busca Cep ================================")
 
 
 
-
-
-input("teste")
 
 
 
