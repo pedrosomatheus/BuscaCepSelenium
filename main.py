@@ -11,12 +11,6 @@ from validaArquivo import ValidaArquivo
 
 
 
-
-#Chamando a função que faz a validação das pasta e arquivo de log
-ValidaArquivo()
-
-
-
 #Função para abrir o navegador
 def abreNavegador(Url):
 
@@ -90,94 +84,118 @@ EscreveLog("=========================== INICIO - Navegação Busca Cep =========
 
 
 
-# we may be interested in finding all the drivers we have access to
+#Chamando a função que faz a validação das pasta e arquivo de log para retornar o nome do arquivo excel
+mensagem = "Chamando a função que faz a validação das pasta e arquivo de log para retornar o nome do arquivo excel"
+EscreveLog(mensagem)
+
+CaminhoArquivoExcel = ValidaArquivo()
+
+
+# Capturando driver
+mensagem = "Capturando driver"
+EscreveLog(mensagem)
+
+
 for driver in pyodbc.drivers():
    
-    # print the driver name
-    print(driver)
-    
-    # if the driver name has '.xlsx' in it we found it!
+    # Pegando o nome apenas para o driver .xlsx
+    mensagem = "Pegando o nome apenas para o driver .xlsx"
+    EscreveLog(mensagem)
     if '.xlsx' in driver:
         myDriver = driver
 
-# define our connection string
-conn_str = (r'DRIVER={'+ myDriver +'};'
-            r'DBQ=C:\Users\Alex\Desktop\Video List.xlsx;'
-            r'ReadOnly=1') # ReadOnly set to 0 means we can edit the data.
+# Definindo connection string
+mensagem = "Definindo connection string"
+EscreveLog(mensagem)
 
-# define our connection, autocommit MUST BE SET TO TRUE, also we can edit data.
+conn_str = (r'DRIVER={'+ myDriver +'};'
+            f'DBQ={CaminhoArquivoExcel};'
+            r'ReadOnly=1') # para leitura setar como 0
+
+# definir nossa conexão, autocommit DEVE SER CONFIGURADO PARA TRUE, também podemos editar dados.
 cnxn = pyodbc.connect(conn_str, autocommit=True)
 crsr = cnxn.cursor()
 
-# loop through all the tables
+
 for worksheet in crsr.tables():
-    
-    # display the worksheet
-    print(worksheet)
-    
-    # grab the table name.
+
+    # Pegando worksheet
+    mensagem = "Pegando worksheet"
+    EscreveLog(mensagem)
     tableName = worksheet[2]
     
-# define our query to grab the data.
-# we want this "SELECT Topic FROM [Sheet1$]"
-crsr.execute("SELECT Topic FROM [{}]".format(tableName))
+    
+#"SELECT * FROM [Planilha1$]"
+mensagem = "Query executada: SELECT * FROM [Planilha1$]"
+EscreveLog(mensagem)
+crsr.execute("SELECT * FROM [{}]".format(tableName))
 
-# print each row of data.
+
+#Loop na minha tabela
 for row in crsr:
-    print(row.Topic)
+    
+    #Setando variaveis
+    Cep = row.CEP
+    lougradouro = ""
+    bairro = ""
+    localidade= ""
+
+
+    #Abrindo navegador
+    mensagem = "Abrindo navegador"
+    EscreveLog(mensagem)
+
+
+    Url = "https://buscacepinter.correios.com.br/app/endereco/index.php"
+
+    driver = abreNavegador(Url)
 
 
 
-#Abrindo navegador
-mensagem = "Abrindo navegador"
-EscreveLog(mensagem)
+    #Chamando função para validar se a tela carregou
+    mensagem = "Chamando função para validar se a tela carregou"
+    EscreveLog(mensagem)
 
+    Id = "titulo_tela"
+    TextoElemento = "Busca CEP"
 
-Url = "https://buscacepinter.correios.com.br/app/endereco/index.php"
-
-driver = abreNavegador(Url)
-
-
-
-
-#Chamando função para validar se a tela carregou
-mensagem = "Chamando função para validar se a tela carregou"
-EscreveLog(mensagem)
-
-Id = "titulo_tela"
-TextoElemento = "Busca CEP"
-
-WebValidaTextJs(Id,TextoElemento,tempoCurto)
+    WebValidaTextJs(Id,TextoElemento,tempoCurto)
 
 
 
+    #Setando o valor no site
+    mensagem = "Setando o valor no site"
+    EscreveLog(mensagem)
 
-#Setando o valor no site
-mensagem = "Setando o valor no site"
-EscreveLog(mensagem)
+    Id = "endereco"
 
-Id = "endereco"
+    SetaElementoId(Id, Cep)
 
-SetaElementoId(Id, "06680103")
+
+
+    #Clicando no botão pesquisar
+    mensagem = "Clicando no botão pesquisar"
+    EscreveLog(mensagem)
+
+    Id = "btn_pesquisar"
+
+    ClickId(Id)
 
 
 
 
+    
 
-#Clicando no botão pesquisar
-mensagem = "Clicando no botão pesquisar"
-EscreveLog(mensagem)
-
-Id = "btn_pesquisar"
-
-ClickId(Id)
-
-
-
+    input("teste")
 
 EscreveLog("=========================== FIM - Navegação Busca Cep ================================")
 
+
+
+
+
 input("teste")
+
 
 
 
