@@ -1,12 +1,15 @@
-import time
+from pathlib import Path
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.by import By
+import pyodbc
+import shutil
+
+import time
 import os
 
-import pyodbc
+
 
 from validaArquivo import EscreveLog
 from validaArquivo import ValidaArquivo
@@ -114,6 +117,9 @@ mensagem = "Chamando a função que faz a validação das pasta e arquivo de log
 EscreveLog(mensagem)
 
 CaminhoArquivoExcel = ValidaArquivo()
+
+CaminhoProjeto = f'{Path.home()}\\BPA001 - BuscaCep'
+CaminhoFinalizado = f'{CaminhoProjeto}\\4. FINALIZADO'
 
 
 if len(CaminhoArquivoExcel) > 0:
@@ -291,6 +297,14 @@ if len(CaminhoArquivoExcel) > 0:
         Id = "btn_nbusca"
 
         ClickId(Id)
+
+    
+
+    #Movendo arquivo para de finalizado
+    mensagem = "Movendo arquivo para de finalizado"
+    EscreveLog(mensagem)
+
+    shutil.move(CaminhoArquivoExcel, CaminhoFinalizado)
 
 
     #Matando sessão do driver no fim do processo
