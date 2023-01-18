@@ -14,7 +14,7 @@ from validaArquivo import ValidaArquivo
 
 
 #Função para abrir o navegador
-def abreNavegador(Url):
+def AbreNavegador(Url):
 
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
@@ -23,6 +23,10 @@ def abreNavegador(Url):
     driver.maximize_window()
 
     return driver
+
+#Fechando a sessão do driver
+def FecharNavegador():
+    driver.close()
 
 #Função para executar comando JS
 def ExecutaJs(Script):
@@ -154,8 +158,10 @@ if len(CaminhoArquivoExcel) > 0:
     mensagem = "Query executada: SELECT * FROM [Planilha1$]"
     EscreveLog(mensagem)
 
-    Query = f"SELECT * FROM [{format(tableName)}]"
+    Query = f"SELECT * FROM [{format(tableName)}] WHERE [Status] IS NULL"
     crsr.execute(Query)
+
+    
 
     #Abrindo navegador
     mensagem = "Abrindo navegador"
@@ -164,7 +170,7 @@ if len(CaminhoArquivoExcel) > 0:
 
     Url = "https://buscacepinter.correios.com.br/app/endereco/index.php"
 
-    driver = abreNavegador(Url)
+    driver = AbreNavegador(Url)
 
 
     # Loop na minha tabela
@@ -172,7 +178,7 @@ if len(CaminhoArquivoExcel) > 0:
         
         print(row)
 
-        input("teste")
+
         # Setando variaveis
         Cep = row.CEP
         lougradouro = ""
@@ -236,8 +242,7 @@ if len(CaminhoArquivoExcel) > 0:
             EscreveLog(mensagem) 
 
             crsr.execute(Query)
-            cnxn.commit()
-
+                
         else:
 
             #Texto encontrado capturando informações do CEP
@@ -261,30 +266,42 @@ if len(CaminhoArquivoExcel) > 0:
 
             except:
                 #A elementos que dependendo do CEP que não aparecem
-                pass
+                continue
 
 
             Query = f"UPDATE [{format(tableName)}] SET [Logradouro] = '{logradouro}', [Bairro] = '{bairro}', [Localidade] = '{localidade}', [Data da Consulta] = '{dataHora}', [Status] = 'OK' WHERE [CEP] = '{Cep}'"
+            
             crsr.execute(Query)
-            cnxn.commit()
 
 
 
-            # Clicando no botão pesquisar
-            mensagem = "Clicando no botão Nova Busca"
-            EscreveLog(mensagem)
 
-            Id = "btn_nbusca"
+        #Realizando query para buscar novamente as linhas atualizadas
+        mensagem = "Realizando query para buscar novamente as linhas atualizadas"
+        EscreveLog(mensagem)
 
-            ClickId(Id)
+        Query = f"SELECT * FROM [{format(tableName)}] WHERE [Status] IS NULL"
+        crsr.execute(Query).fetchval()
 
+
+        # Clicando no botão pesquisar
+        mensagem = "Clicando no botão Nova Busca"
+        EscreveLog(mensagem)
+
+        Id = "btn_nbusca"
+
+        ClickId(Id)
+
+
+    #Matando sessão do driver no fim do processo
+    mensagem = "Matando sessão do driver no fim do processo"
+    EscreveLog(mensagem)
+    FecharNavegador()
 
 
     EscreveLog("=========================== FIM - Navegação Busca Cep ================================")
 
 
-
-input("teste")
 
 
 
