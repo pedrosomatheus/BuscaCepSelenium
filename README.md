@@ -13,8 +13,7 @@
  
  A estrutura de pasta é montado pela própria automação, exemplo de pastas:
  
- ![image](https://user-images.githubusercontent.com/51141664/213309193-d5c13688-97a8-4779-a86e-76fb1b4c40fd.png)
-
+ ![image](https://user-images.githubusercontent.com/51141664/213310474-3a92be7c-40f9-4d12-b1f0-976ca7912e5d.png)
 
  
  ## Exemplo de LOG:
