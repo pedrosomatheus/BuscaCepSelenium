@@ -9,6 +9,14 @@
  [consulta CEP.xlsx](https://github.com/pedrosomatheus/BuscaCepSelenium/files/10451599/consulta.CEP.xlsx)
  
  
+ ## Estrutura de Pastas:
+ 
+ A estrutura de pasta é montado pela própria automação, exemplo de pastas:
+ 
+ ![image](https://user-images.githubusercontent.com/51141664/213309193-d5c13688-97a8-4779-a86e-76fb1b4c40fd.png)
+
+
+ 
  ## Exemplo de LOG:
  
  Seguindo padrão o arquivo separado por pasta de ano, mes e dia, exemplo de LOG:
