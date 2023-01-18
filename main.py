@@ -182,8 +182,6 @@ if len(CaminhoArquivoExcel) > 0:
     # Loop na minha tabela
     for row in crsr:
         
-        print(row)
-
 
         # Setando variaveis
         Cep = row.CEP
@@ -299,12 +297,9 @@ if len(CaminhoArquivoExcel) > 0:
         ClickId(Id)
 
     
+    crsr.close()
+    cnxn.close()
 
-    #Movendo arquivo para de finalizado
-    mensagem = "Movendo arquivo para de finalizado"
-    EscreveLog(mensagem)
-
-    shutil.move(CaminhoArquivoExcel, CaminhoFinalizado)
 
 
     #Matando sessão do driver no fim do processo
@@ -313,9 +308,15 @@ if len(CaminhoArquivoExcel) > 0:
     FecharNavegador()
 
 
+    
+
+    #Movendo arquivo para de finalizado
+    mensagem = "Movendo arquivo para de finalizado"
+    EscreveLog(mensagem)
+
+    shutil.move(CaminhoArquivoExcel, CaminhoFinalizado)
+
     EscreveLog("=========================== FIM - Navegação Busca Cep ================================")
-
-
 
 
 
