@@ -2,7 +2,7 @@
  
  ## Sobre:
  
- O processo consiste no robô validar se as pasta estão criadas, validar se o arquivo está na pasta INPUT, se tiver mover para a pasta PROCESSAMENTO, vai consultar os dados da planilha via SQL por connection string, abrir o site, colocar a informação do CEP e capturar o retorno do site e colocar na planilha, o mesmo escreve um arquivo de LOG para poder acompanhar o processo do robô.
+ O processo consiste no robô validar se as pasta estão criadas, validar se o arquivo está na pasta INPUT, se tiver mover para a pasta PROCESSAMENTO, vai consultar os dados da planilha via SQL por connection string, abrir o site, colocar a informação do CEP e capturar o retorno do site e colocar na planilha, ele escreve um arquivo de LOG para poder acompanhar o processo do robô.
  
  ## Modelo da Planilha:
  
